@@ -7,6 +7,7 @@ import {
   insertDepartmentSchema, 
   insertBranchSchema,
   insertLeaveRequestSchema,
+  insertLeaveTypeSchema,
   insertShiftSchema,
   insertShiftAssignmentSchema,
   insertAttendanceRecordSchema
@@ -199,6 +200,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching leave types:", error);
       res.status(500).json({ message: "Failed to fetch leave types" });
+    }
+  });
+
+  app.post('/api/leave-types', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertLeaveTypeSchema.parse(req.body);
+      const leaveType = await storage.createLeaveType(validatedData);
+      res.status(201).json(leaveType);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error creating leave type:", error);
+      res.status(500).json({ message: "Failed to create leave type" });
     }
   });
 

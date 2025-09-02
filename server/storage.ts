@@ -345,7 +345,7 @@ export class DatabaseStorage implements IStorage {
       .leftJoin(shifts, eq(shiftAssignments.shiftId, shifts.id));
 
     if (date) {
-      baseQuery = baseQuery.where(and(eq(shiftAssignments.isActive, true), eq(shiftAssignments.date, date)));
+      baseQuery = baseQuery.where(and(eq(shiftAssignments.isActive, true), eq(shiftAssignments.date, date))) as any;
     } else {
       baseQuery = baseQuery.where(eq(shiftAssignments.isActive, true));
     }
@@ -366,13 +366,14 @@ export class DatabaseStorage implements IStorage {
 
   // Attendance operations
   async getAttendanceRecords(date?: string): Promise<AttendanceRecord[]> {
-    let query = db.select().from(attendanceRecords);
-    
     if (date) {
-      query = query.where(eq(attendanceRecords.date, date));
+      return await db.select().from(attendanceRecords)
+        .where(eq(attendanceRecords.date, date))
+        .orderBy(desc(attendanceRecords.date));
     }
 
-    return await query.orderBy(desc(attendanceRecords.date));
+    return await db.select().from(attendanceRecords)
+      .orderBy(desc(attendanceRecords.date));
   }
 
   async createAttendanceRecord(record: InsertAttendanceRecord): Promise<AttendanceRecord> {
