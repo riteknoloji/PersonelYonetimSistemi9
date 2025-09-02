@@ -116,8 +116,10 @@ export const leaveRequests = pgTable("leave_requests", {
 export const shifts = pgTable("shifts", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: varchar("name").notNull(),
+  description: varchar("description"),
   startTime: varchar("start_time").notNull(), // "08:00"
   endTime: varchar("end_time").notNull(), // "16:00"
+  workingHours: varchar("working_hours"),
   color: varchar("color").default("#3B82F6"), // Color code for display
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),

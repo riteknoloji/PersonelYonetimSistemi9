@@ -13,6 +13,7 @@ import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
 import Personnel from "@/pages/Personnel";
 import Leave from "@/pages/Leave";
+import Shift from "@/pages/Shift";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -78,12 +79,7 @@ function Router() {
               )}
               {activeMenuItem === "personnel" && <Personnel />}
               {activeMenuItem === "leave" && <Leave />}
-              {activeMenuItem === "shift" && (
-                <div className="px-4 py-6 sm:px-6 lg:px-8">
-                  <h1 className="text-2xl font-bold">Vardiya Yönetimi</h1>
-                  <p className="text-muted-foreground mt-2">Bu özellik yakında eklenecek.</p>
-                </div>
-              )}
+              {activeMenuItem === "shift" && <Shift />}
               {activeMenuItem === "attendance" && (
                 <div className="px-4 py-6 sm:px-6 lg:px-8">
                   <h1 className="text-2xl font-bold">Giriş-Çıkış Takip</h1>

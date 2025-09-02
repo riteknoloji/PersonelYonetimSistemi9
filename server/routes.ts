@@ -195,7 +195,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Leave types routes
   app.get('/api/leave-types', isAuthenticated, async (req, res) => {
     try {
-      const leaveTypes = await storage.getLeaveTypes();
+      let leaveTypes = await storage.getLeaveTypes();
+      
+      // Eğer hiç izin türü yoksa varsayılan olanları ekle
+      if (leaveTypes.length === 0) {
+        const defaultTypes = [
+          { name: "Yıllık İzin", description: "Çalışanın yıllık izin hakkı", maxDays: "20", isActive: true },
+          { name: "Hastalık İzni", description: "Sağlık sorunu nedeniyle alınan izin", maxDays: "30", isActive: true },
+          { name: "Doğum İzni", description: "Doğum öncesi ve sonrası izin", maxDays: "98", isActive: true },
+          { name: "Babalık İzni", description: "Baba adayları için izin", maxDays: "10", isActive: true },
+          { name: "Acil Durum İzni", description: "Acil durumlarda alınan kısa süreli izin", maxDays: "3", isActive: true }
+        ];
+        
+        for (const typeData of defaultTypes) {
+          await storage.createLeaveType(typeData);
+        }
+        
+        leaveTypes = await storage.getLeaveTypes();
+      }
+      
       res.json(leaveTypes);
     } catch (error) {
       console.error("Error fetching leave types:", error);
@@ -220,11 +238,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Shift routes
   app.get('/api/shifts', isAuthenticated, async (req, res) => {
     try {
-      const shifts = await storage.getShifts();
+      let shifts = await storage.getShifts();
+      
+      // Eğer hiç vardiya yoksa varsayılan olanları ekle
+      if (shifts.length === 0) {
+        const defaultShifts = [
+          { 
+            name: "Sabah Vardiyası", 
+            description: "Normal mesai sabah vardiyası", 
+            startTime: "08:00", 
+            endTime: "17:00", 
+            workingHours: "8", 
+            isActive: true 
+          },
+          { 
+            name: "Öğle Vardiyası", 
+            description: "Öğle vardiyası", 
+            startTime: "12:00", 
+            endTime: "21:00", 
+            workingHours: "8", 
+            isActive: true 
+          },
+          { 
+            name: "Gece Vardiyası", 
+            description: "Gece vardiyası", 
+            startTime: "22:00", 
+            endTime: "06:00", 
+            workingHours: "8", 
+            isActive: true 
+          }
+        ];
+        
+        for (const shiftData of defaultShifts) {
+          await storage.createShift(shiftData);
+        }
+        
+        shifts = await storage.getShifts();
+      }
+      
       res.json(shifts);
     } catch (error) {
       console.error("Error fetching shifts:", error);
       res.status(500).json({ message: "Failed to fetch shifts" });
+    }
+  });
+
+  app.post('/api/shifts', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertShiftSchema.parse(req.body);
+      const shift = await storage.createShift(validatedData);
+      res.status(201).json(shift);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error creating shift:", error);
+      res.status(500).json({ message: "Failed to create shift" });
+    }
+  });
+
+  app.delete('/api/shifts/:id', isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteShift(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting shift:", error);
+      res.status(500).json({ message: "Failed to delete shift" });
     }
   });
 
@@ -265,6 +344,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       console.error("Error creating shift assignment:", error);
       res.status(500).json({ message: "Failed to create shift assignment" });
+    }
+  });
+
+  app.delete('/api/shift-assignments/:id', isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteShiftAssignment(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting shift assignment:", error);
+      res.status(500).json({ message: "Failed to delete shift assignment" });
     }
   });
 

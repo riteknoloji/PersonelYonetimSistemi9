@@ -70,8 +70,10 @@ export interface IStorage {
   // Shift operations
   getShifts(): Promise<Shift[]>;
   createShift(shift: InsertShift): Promise<Shift>;
+  deleteShift(id: string): Promise<void>;
   getShiftAssignments(date?: string): Promise<ShiftAssignmentWithRelations[]>;
   createShiftAssignment(assignment: InsertShiftAssignment): Promise<ShiftAssignment>;
+  deleteShiftAssignment(id: string): Promise<void>;
   
   // Attendance operations
   getAttendanceRecords(date?: string): Promise<AttendanceRecord[]>;
@@ -261,7 +263,7 @@ export class DatabaseStorage implements IStorage {
 
   // Leave operations
   async getLeaveTypes(): Promise<LeaveType[]> {
-    return await db.select().from(leaveTypes).where(eq(leaveTypes.isActive, true));
+    return await db.select().from(leaveTypes).orderBy(desc(leaveTypes.createdAt));
   }
 
   async createLeaveType(leaveType: InsertLeaveType): Promise<LeaveType> {
@@ -327,6 +329,10 @@ export class DatabaseStorage implements IStorage {
     return newShift;
   }
 
+  async deleteShift(id: string): Promise<void> {
+    await db.delete(shifts).where(eq(shifts.id, id));
+  }
+
   async getShiftAssignments(date?: string): Promise<ShiftAssignmentWithRelations[]> {
     let baseQuery = db
       .select({
@@ -347,7 +353,7 @@ export class DatabaseStorage implements IStorage {
     if (date) {
       baseQuery = baseQuery.where(and(eq(shiftAssignments.isActive, true), eq(shiftAssignments.date, date))) as any;
     } else {
-      baseQuery = baseQuery.where(eq(shiftAssignments.isActive, true));
+      baseQuery = baseQuery.where(eq(shiftAssignments.isActive, true)) as any;
     }
 
     const result = await baseQuery.orderBy(shiftAssignments.date);
@@ -362,6 +368,10 @@ export class DatabaseStorage implements IStorage {
   async createShiftAssignment(assignment: InsertShiftAssignment): Promise<ShiftAssignment> {
     const [newAssignment] = await db.insert(shiftAssignments).values(assignment).returning();
     return newAssignment;
+  }
+
+  async deleteShiftAssignment(id: string): Promise<void> {
+    await db.delete(shiftAssignments).where(eq(shiftAssignments.id, id));
   }
 
   // Attendance operations
