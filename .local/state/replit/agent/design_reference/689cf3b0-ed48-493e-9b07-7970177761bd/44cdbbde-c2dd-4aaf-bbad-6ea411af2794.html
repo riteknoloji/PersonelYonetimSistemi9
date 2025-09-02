@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personel Yönetim Sistemi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                    chart: {
+                        "1": "var(--chart-1)",
+                        "2": "var(--chart-2)",
+                        "3": "var(--chart-3)",
+                        "4": "var(--chart-4)",
+                        "5": "var(--chart-5)",
+                    }
+                },
+                fontFamily: {
+                    sans: ["var(--font-sans)"],
+                    serif: ["var(--font-serif)"],
+                    mono: ["var(--font-mono)"],
+                }
+            },
+        }
+    };
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: hsl(210 40% 98%);
+            --foreground: hsl(222.2 84% 4.9%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(222.2 84% 4.9%);
+            --popover: hsl(0 0% 100%);
+            --popover-foreground: hsl(222.2 84% 4.9%);
+            --primary: hsl(221.2 83.2% 53.3%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(210 40% 96%);
+            --secondary-foreground: hsl(222.2 84% 4.9%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(215.4 16.3% 46.9%);
+            --accent: hsl(210 40% 96%);
+            --accent-foreground: hsl(222.2 84% 4.9%);
+            --destructive: hsl(0 84.2% 60.2%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(214.3 31.8% 91.4%);
+            --input: hsl(214.3 31.8% 91.4%);
+            --ring: hsl(221.2 83.2% 53.3%);
+            --radius: 0.5rem;
+            --chart-1: hsl(12 76% 61%);
+            --chart-2: hsl(173 58% 39%);
+            --chart-3: hsl(197 37% 24%);
+            --chart-4: hsl(43 74% 66%);
+            --chart-5: hsl(27 87% 67%);
+            --font-sans: 'Inter', system-ui, sans-serif;
+        }
+        body {
+            font-family: var(--font-sans);
+        }
+        .sidebar-transition {
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal-backdrop {
+            backdrop-filter: blur(2px);
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground">
+    <!-- @COMPONENT: MainLayout [Complete application layout with sidebar and main content] -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <!-- @COMPONENT: Sidebar [Navigation sidebar with menu items] -->
+        <div class="hidden lg:flex lg:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-card border-r border-border">
+                <!-- Logo/Header -->
+                <div class="flex items-center justify-center h-16 px-4 border-b border-border">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-primary-foreground"></i>
+                        </div>
+                        <span class="text-lg font-semibold text-foreground">Personel Yönetim</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+                    <!-- @STATE: activeMenuItem:string = 'dashboard' -->
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground" data-menu-item="dashboard">
+                        <i class="fas fa-home mr-3 h-4 w-4"></i>
+                        Dashboard
+                    </a>
+                    
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground" data-menu-item="personnel">
+                        <i class="fas fa-user-friends mr-3 h-4 w-4"></i>
+                        Personel Yönetimi
+                    </a>
+
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground" data-menu-item="leave">
+                        <i class="fas fa-calendar-check mr-3 h-4 w-4"></i>
+                        İzin Yönetimi
+                    </a>
+
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground" data-menu-item="shift">
+                        <i class="fas fa-clock mr-3 h-4 w-4"></i>
+                        Vardiya Yönetimi
+                    </a>
+
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground" data-menu-item="attendance">
+                        <i class="fas fa-qrcode mr-3 h-4 w-4"></i>
+                        Giriş-Çıkış Takip
+                    </a>
+
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground" data-menu-item="branch">
+                        <i class="fas fa-building mr-3 h-4 w-4"></i>
+                        Şube Yönetimi
+                    </a>
+
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground" data-menu-item="calendar">
+                        <i class="fas fa-calendar mr-3 h-4 w-4"></i>
+                        Takvim
+                    </a>
+
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground" data-menu-item="reports">
+                        <i class="fas fa-chart-bar mr-3 h-4 w-4"></i>
+                        Raporlar
+                    </a>
+
+                    <div class="mt-6 pt-6 border-t border-border">
+                        <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground" data-menu-item="settings">
+                            <i class="fas fa-cog mr-3 h-4 w-4"></i>
+                            Ayarlar
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: Sidebar -->
+
+        <!-- Main Content Area -->
+        <div class="flex flex-col w-0 flex-1 overflow-hidden">
+            <!-- Top Navigation -->
+            <!-- @COMPONENT: TopNavigation [Header with user info and notifications] -->
+            <header class="bg-card border-b border-border px-4 py-3 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between">
+                    <!-- Mobile menu button -->
+                    <button class="lg:hidden p-2 text-muted-foreground hover:text-foreground" id="mobile-menu-button">
+                        <i class="fas fa-bars h-5 w-5"></i>
+                    </button>
+
+                    <!-- Search Bar -->
+                    <div class="flex-1 max-w-lg mx-4">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search h-4 w-4 text-muted-foreground"></i>
+                            </div>
+                            <input 
+                                type="text" 
+                                class="block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-sm" 
+                                placeholder="Personel ara..." 
+                                data-mock="true"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Right side actions -->
+                    <div class="flex items-center space-x-4">
+                        <!-- Notifications -->
+                        <div class="relative">
+                            <button class="p-2 text-muted-foreground hover:text-foreground relative" data-event="click:toggleNotifications">
+                                <i class="fas fa-bell h-5 w-5"></i>
+                                <span class="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-destructive-foreground rounded-full text-xs flex items-center justify-center" data-bind="notificationCount">3</span>
+                            </button>
+                        </div>
+
+                        <!-- User Profile -->
+                        <div class="relative">
+                            <button class="flex items-center space-x-2 p-2 text-sm text-muted-foreground hover:text-foreground" data-event="click:toggleUserMenu">
+                                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-primary-foreground text-sm"></i>
+                                </div>
+                                <span class="hidden md:block" data-bind="user.name">Ahmet Yılmaz</span>
+                                <i class="fas fa-chevron-down h-4 w-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- @END_COMPONENT: TopNavigation -->
+
+            <!-- Main Content -->
+            <!-- @COMPONENT: MainContent [Dashboard content area] -->
+            <main class="flex-1 overflow-y-auto bg-background">
+                <div class="px-4 py-6 sm:px-6 lg:px-8">
+                    <!-- Page Header -->
+                    <div class="mb-8">
+                        <h1 class="text-2xl font-bold text-foreground">Dashboard</h1>
+                        <p class="text-muted-foreground">Personel yönetim sistemi genel görünümü</p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <!-- @COMPONENT: StatsCards [Statistics overview cards] -->
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                        <!-- @MAP: stats.map(stat => ( -->
+                        <div class="bg-card rounded-lg border border-border p-6 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-muted-foreground" data-mock="true">Toplam Personel</p>
+                                    <p class="text-2xl font-bold text-foreground" data-bind="stats.totalPersonnel" data-mock="true">147</p>
+                                </div>
+                                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-users text-primary h-6 w-6"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm">
+                                <span class="text-green-600 font-medium" data-mock="true">+5.2%</span>
+                                <span class="text-muted-foreground ml-1" data-mock="true">geçen aya göre</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-card rounded-lg border border-border p-6 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-muted-foreground" data-mock="true">Bugün İzinli</p>
+                                    <p class="text-2xl font-bold text-foreground" data-bind="stats.onLeave" data-mock="true">12</p>
+                                </div>
+                                <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-calendar-check text-yellow-600 h-6 w-6"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm">
+                                <span class="text-yellow-600 font-medium" data-mock="true">8.2%</span>
+                                <span class="text-muted-foreground ml-1" data-mock="true">toplam personelin</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-card rounded-lg border border-border p-6 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-muted-foreground" data-mock="true">Aktif Vardiyalar</p>
+                                    <p class="text-2xl font-bold text-foreground" data-bind="stats.activeShifts" data-mock="true">8</p>
+                                </div>
+                                <div class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-clock text-green-600 h-6 w-6"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm">
+                                <span class="text-green-600 font-medium" data-mock="true">Aktif</span>
+                                <span class="text-muted-foreground ml-1" data-mock="true">şu anda çalışıyor</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-card rounded-lg border border-border p-6 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-muted-foreground" data-mock="true">Bekleyen İzinler</p>
+                                    <p class="text-2xl font-bold text-foreground" data-bind="stats.pendingLeaves" data-mock="true">7</p>
+                                </div>
+                                <div class="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-hourglass-half text-orange-600 h-6 w-6"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-sm">
+                                <span class="text-orange-600 font-medium" data-mock="true">Onay bekliyor</span>
+                                <span class="text-muted-foreground ml-1" data-mock="true">işlem gerekli</span>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                    <!-- @END_COMPONENT: StatsCards -->
+
+                    <!-- Main Dashboard Content -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Recent Activities -->
+                        <!-- @COMPONENT: RecentActivities [Recent system activities list] -->
+                        <div class="lg:col-span-2">
+                            <div class="bg-card rounded-lg border border-border p-6 shadow-sm">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-lg font-semibold text-foreground">Son Aktiviteler</h3>
+                                    <button class="text-sm text-primary hover:text-primary/80" data-event="click:viewAllActivities">
+                                        Tümünü Gör
+                                    </button>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <!-- @MAP: activities.map(activity => ( -->
+                                    <div class="flex items-start space-x-3 p-3 hover:bg-muted/50 rounded-lg transition-colors" data-mock="true">
+                                        <div class="w-8 h-8 bg-green-500/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-user-plus text-green-600 text-sm"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm text-foreground">
+                                                <span class="font-medium" data-bind="activity.user">Mehmet Demir</span> 
+                                                <span data-bind="activity.action">sisteme yeni personel ekledi</span>
+                                            </p>
+                                            <p class="text-xs text-muted-foreground" data-bind="activity.time">2 saat önce</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start space-x-3 p-3 hover:bg-muted/50 rounded-lg transition-colors" data-mock="true">
+                                        <div class="w-8 h-8 bg-blue-500/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-calendar-check text-blue-600 text-sm"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm text-foreground">
+                                                <span class="font-medium">Ayşe Kaya</span> 
+                                                izin talebini onayladı
+                                            </p>
+                                            <p class="text-xs text-muted-foreground">4 saat önce</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start space-x-3 p-3 hover:bg-muted/50 rounded-lg transition-colors" data-mock="true">
+                                        <div class="w-8 h-8 bg-orange-500/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-clock text-orange-600 text-sm"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm text-foreground">
+                                                <span class="font-medium">Ali Özkan</span> 
+                                                vardiya değişikliği yaptı
+                                            </p>
+                                            <p class="text-xs text-muted-foreground">6 saat önce</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start space-x-3 p-3 hover:bg-muted/50 rounded-lg transition-colors" data-mock="true">
+                                        <div class="w-8 h-8 bg-red-500/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-exclamation-triangle text-red-600 text-sm"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm text-foreground">
+                                                <span class="font-medium">Sistem</span> 
+                                                geç kalma uyarısı gönderdi
+                                            </p>
+                                            <p class="text-xs text-muted-foreground">1 gün önce</p>
+                                        </div>
+                                    </div>
+                                    <!-- @END_MAP )) -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: RecentActivities -->
+
+                        <!-- Quick Actions & Notifications -->
+                        <div class="space-y-6">
+                            <!-- Quick Actions -->
+                            <!-- @COMPONENT: QuickActions [Quick action buttons for common tasks] -->
+                            <div class="bg-card rounded-lg border border-border p-6 shadow-sm">
+                                <h3 class="text-lg font-semibold text-foreground mb-4">Hızlı İşlemler</h3>
+                                <div class="space-y-3">
+                                    <button class="w-full flex items-center justify-start space-x-3 p-3 text-left text-sm text-foreground hover:bg-muted rounded-lg transition-colors" data-event="click:addPersonnel">
+                                        <div class="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-user-plus text-primary text-sm"></i>
+                                        </div>
+                                        <span>Yeni Personel Ekle</span>
+                                    </button>
+
+                                    <button class="w-full flex items-center justify-start space-x-3 p-3 text-left text-sm text-foreground hover:bg-muted rounded-lg transition-colors" data-event="click:createShift">
+                                        <div class="w-8 h-8 bg-green-500/10 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-calendar-plus text-green-600 text-sm"></i>
+                                        </div>
+                                        <span>Vardiya Oluştur</span>
+                                    </button>
+
+                                    <button class="w-full flex items-center justify-start space-x-3 p-3 text-left text-sm text-foreground hover:bg-muted rounded-lg transition-colors" data-event="click:generateReport">
+                                        <div class="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-file-alt text-blue-600 text-sm"></i>
+                                        </div>
+                                        <span>Rapor Oluştur</span>
+                                    </button>
+
+                                    <button class="w-full flex items-center justify-start space-x-3 p-3 text-left text-sm text-foreground hover:bg-muted rounded-lg transition-colors" data-event="click:sendNotification">
+                                        <div class="w-8 h-8 bg-purple-500/10 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-bullhorn text-purple-600 text-sm"></i>
+                                        </div>
+                                        <span>Bildirim Gönder</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- @END_COMPONENT: QuickActions -->
+
+                            <!-- Today's Schedule -->
+                            <!-- @COMPONENT: TodaysSchedule [Today's shift schedule overview] -->
+                            <div class="bg-card rounded-lg border border-border p-6 shadow-sm">
+                                <h3 class="text-lg font-semibold text-foreground mb-4">Bugünün Programı</h3>
+                                <div class="space-y-3">
+                                    <!-- @MAP: todaySchedule.map(shift => ( -->
+                                    <div class="flex items-center justify-between p-3 bg-muted/30 rounded-lg" data-mock="true">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-3 h-3 bg-blue-500 rounded-full" data-implementation="Color should match shift type"></div>
+                                            <div>
+                                                <p class="text-sm font-medium text-foreground" data-bind="shift.name">Sabah Vardiyası</p>
+                                                <p class="text-xs text-muted-foreground" data-bind="shift.time">08:00 - 16:00</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-sm font-medium text-foreground" data-bind="shift.count">15 kişi</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between p-3 bg-muted/30 rounded-lg" data-mock="true">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
+                                            <div>
+                                                <p class="text-sm font-medium text-foreground">Akşam Vardiyası</p>
+                                                <p class="text-xs text-muted-foreground">16:00 - 00:00</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-sm font-medium text-foreground">12 kişi</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between p-3 bg-muted/30 rounded-lg" data-mock="true">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                                            <div>
+                                                <p class="text-sm font-medium text-foreground">Gece Vardiyası</p>
+                                                <p class="text-xs text-muted-foreground">00:00 - 08:00</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-sm font-medium text-foreground">8 kişi</span>
+                                    </div>
+                                    <!-- @END_MAP )) -->
+                                </div>
+                            </div>
+                            <!-- @END_COMPONENT: TodaysSchedule -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <!-- @END_COMPONENT: MainContent -->
+        </div>
+    </div>
+    <!-- @END_COMPONENT: MainLayout -->
+
+    <!-- Mobile Sidebar Overlay -->
+    <!-- @COMPONENT: MobileSidebar [Mobile responsive sidebar overlay] -->
+    <div class="lg:hidden fixed inset-0 z-50 hidden" id="mobile-sidebar-overlay">
+        <div class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop" id="mobile-sidebar-backdrop"></div>
+        <div class="fixed inset-y-0 left-0 max-w-xs w-full bg-card shadow-lg sidebar-transition transform -translate-x-full" id="mobile-sidebar">
+            <!-- Mobile Sidebar Content (same as desktop sidebar) -->
+            <div class="flex flex-col h-full">
+                <div class="flex items-center justify-between h-16 px-4 border-b border-border">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-primary-foreground"></i>
+                        </div>
+                        <span class="text-lg font-semibold text-foreground">Personel Yönetim</span>
+                    </div>
+                    <button class="p-2 text-muted-foreground hover:text-foreground" id="close-mobile-sidebar">
+                        <i class="fas fa-times h-5 w-5"></i>
+                    </button>
+                </div>
+
+                <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+                    <a href="#" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground">
+                        <i class="fas fa-home mr-3 h-4 w-4"></i>
+                        Dashboard
+                    </a>
+                    <!-- Add all menu items here similar to desktop -->
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: MobileSidebar -->
+
+    <!-- Example Modal for Personnel -->
+    <!-- @COMPONENT: PersonnelModal [Modal for adding/editing personnel] -->
+    <div class="fixed inset-0 z-50 hidden" id="personnel-modal">
+        <div class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop"></div>
+        <div class="fixed inset-0 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4">
+                <div class="bg-card rounded-lg shadow-xl max-w-md w-full p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-foreground">Yeni Personel Ekle</h3>
+                        <button class="text-muted-foreground hover:text-foreground" data-event="click:closeModal">
+                            <i class="fas fa-times h-5 w-5"></i>
+                        </button>
+                    </div>
+
+                    <form class="space-y-4" data-event="submit:handlePersonnelSubmit">
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-1">Ad Soyad</label>
+                            <input 
+                                type="text" 
+                                class="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent" 
+                                placeholder="Personel adı soyadı" 
+                                data-mock="true"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-1">E-posta</label>
+                            <input 
+                                type="email" 
+                                class="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent" 
+                                placeholder="email@ornek.com" 
+                                data-mock="true"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-1">Departman</label>
+                            <select class="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent" data-mock="true">
+                                <option>Departman seçin</option>
+                                <option>İnsan Kaynakları</option>
+                                <option>Bilgi İşlem</option>
+                                <option>Muhasebe</option>
+                                <option>Satış</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-1">Pozisyon</label>
+                            <input 
+                                type="text" 
+                                class="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent" 
+                                placeholder="Pozisyon" 
+                                data-mock="true"
+                            >
+                        </div>
+
+                        <div class="flex justify-end space-x-3 pt-4">
+                            <button 
+                                type="button" 
+                                class="px-4 py-2 text-sm font-medium text-muted-foreground bg-secondary hover:bg-secondary/80 rounded-md transition-colors"
+                                data-event="click:closeModal"
+                            >
+                                İptal
+                            </button>
+                            <button 
+                                type="submit" 
+                                class="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-md transition-colors"
+                                data-implementation="Should validate form before submission"
+                            >
+                                Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: PersonnelModal -->
+
+    <!-- Toast Notification -->
+    <!-- @COMPONENT: Toast [Success/error notification toast] -->
+    <div class="fixed bottom-4 right-4 z-50 hidden" id="toast">
+        <div class="bg-card border border-border rounded-lg shadow-lg p-4 max-w-sm">
+            <div class="flex items-start space-x-3">
+                <div class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0" id="toast-icon">
+                    <i class="fas fa-check text-white text-xs"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm font-medium text-foreground" id="toast-title">İşlem Başarılı</p>
+                    <p class="text-xs text-muted-foreground" id="toast-message">Personel başarıyla eklendi.</p>
+                </div>
+                <button class="text-muted-foreground hover:text-foreground" data-event="click:closeToast">
+                    <i class="fas fa-times h-4 w-4"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Toast -->
+
+    <script>
+        // Basic JavaScript for demonstrations - DO NOT implement business logic
+        (function() {
+            // Mobile sidebar functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            const closeMobileSidebar = document.getElementById('close-mobile-sidebar');
+            const mobileSidebarBackdrop = document.getElementById('mobile-sidebar-backdrop');
+
+            function openMobileSidebar() {
+                mobileSidebarOverlay.classList.remove('hidden');
+                setTimeout(() => {
+                    mobileSidebar.classList.remove('-translate-x-full');
+                }, 10);
+            }
+
+            function closeMobileSidebarFunc() {
+                mobileSidebar.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    mobileSidebarOverlay.classList.add('hidden');
+                }, 300);
+            }
+
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', openMobileSidebar);
+            }
+
+            if (closeMobileSidebar) {
+                closeMobileSidebar.addEventListener('click', closeMobileSidebarFunc);
+            }
+
+            if (mobileSidebarBackdrop) {
+                mobileSidebarBackdrop.addEventListener('click', closeMobileSidebarFunc);
+            }
+
+            // Toast functionality
+            function showToast(title, message, type = 'success') {
+                const toast = document.getElementById('toast');
+                const toastIcon = document.getElementById('toast-icon');
+                const toastTitle = document.getElementById('toast-title');
+                const toastMessage = document.getElementById('toast-message');
+
+                if (type === 'success') {
+                    toastIcon.className = 'w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0';
+                    toastIcon.innerHTML = '<i class="fas fa-check text-white text-xs"></i>';
+                } else if (type === 'error') {
+                    toastIcon.className = 'w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0';
+                    toastIcon.innerHTML = '<i class="fas fa-times text-white text-xs"></i>';
+                }
+
+                toastTitle.textContent = title;
+                toastMessage.textContent = message;
+                
+                toast.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 3000);
+            }
+
+            // Close toast
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('[data-event="click:closeToast"]')) {
+                    document.getElementById('toast').classList.add('hidden');
+                }
+            });
+
+            // Quick Actions
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('[data-event="click:addPersonnel"]')) {
+                    document.getElementById('personnel-modal').classList.remove('hidden');
+                }
+                
+                if (e.target.closest('[data-event="click:closeModal"]')) {
+                    document.getElementById('personnel-modal').classList.add('hidden');
+                }
+
+                if (e.target.closest('[data-event="click:createShift"]')) {
+                    showToast('Vardiya Oluştur', 'Vardiya oluşturma sayfasına yönlendiriliyorsunuz...');
+                }
+
+                if (e.target.closest('[data-event="click:generateReport"]')) {
+                    showToast('Rapor Oluştur', 'Rapor oluşturma işlemi başlatıldı...');
+                }
+
+                if (e.target.closest('[data-event="click:sendNotification"]')) {
+                    showToast('Bildirim Gönder', 'Bildirim gönderme paneli açılıyor...');
+                }
+            });
+
+            // Form submission
+            document.addEventListener('submit', function(e) {
+                if (e.target.closest('[data-event="submit:handlePersonnelSubmit"]')) {
+                    e.preventDefault();
+                    // TODO: Implement form validation and API call
+                    document.getElementById('personnel-modal').classList.add('hidden');
+                    showToast('Başarılı', 'Personel başarıyla eklendi!');
+                }
+            });
+
+            // Menu item activation
+            document.addEventListener('click', function(e) {
+                const menuItem = e.target.closest('[data-menu-item]');
+                if (menuItem) {
+                    // Remove active class from all menu items
+                    document.querySelectorAll('[data-menu-item]').forEach(item => {
+                        item.className = item.className.replace('bg-primary text-primary-foreground', 'text-muted-foreground hover:bg-muted hover:text-foreground');
+                    });
+                    
+                    // Add active class to clicked item
+                    menuItem.className = menuItem.className.replace('text-muted-foreground hover:bg-muted hover:text-foreground', 'bg-primary text-primary-foreground');
+                }
+            });
+
+            // Initialize demo data
+            // TODO: Replace with real data from API
+        })();
+    </script>
+</body>
+</html>
