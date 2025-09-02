@@ -166,7 +166,7 @@ export class DatabaseStorage implements IStorage {
 
   // Personnel operations
   async getPersonnel(): Promise<PersonnelWithRelations[]> {
-    return await db
+    const result = await db
       .select({
         id: personnel.id,
         userId: personnel.userId,
@@ -194,6 +194,12 @@ export class DatabaseStorage implements IStorage {
       .leftJoin(departments, eq(personnel.departmentId, departments.id))
       .leftJoin(branches, eq(personnel.branchId, branches.id))
       .orderBy(desc(personnel.createdAt));
+
+    return result.map(row => ({
+      ...row,
+      department: row.department || undefined,
+      branch: row.branch || undefined
+    }));
   }
 
   async getPersonnelById(id: string): Promise<PersonnelWithRelations | undefined> {
@@ -225,7 +231,14 @@ export class DatabaseStorage implements IStorage {
       .leftJoin(departments, eq(personnel.departmentId, departments.id))
       .leftJoin(branches, eq(personnel.branchId, branches.id))
       .where(eq(personnel.id, id));
-    return result;
+    
+    if (!result) return undefined;
+    
+    return {
+      ...result,
+      department: result.department || undefined,
+      branch: result.branch || undefined
+    };
   }
 
   async createPersonnel(personnelData: InsertPersonnel): Promise<Personnel> {
@@ -257,7 +270,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getLeaveRequests(): Promise<LeaveRequestWithRelations[]> {
-    return await db
+    const result = await db
       .select({
         id: leaveRequests.id,
         personnelId: leaveRequests.personnelId,
@@ -281,6 +294,13 @@ export class DatabaseStorage implements IStorage {
       .leftJoin(leaveTypes, eq(leaveRequests.leaveTypeId, leaveTypes.id))
       .leftJoin(users, eq(leaveRequests.approvedBy, users.id))
       .orderBy(desc(leaveRequests.createdAt));
+
+    return result.map(row => ({
+      ...row,
+      personnel: row.personnel || undefined,
+      leaveType: row.leaveType || undefined,
+      approver: row.approver || undefined
+    }));
   }
 
   async createLeaveRequest(leaveRequest: InsertLeaveRequest): Promise<LeaveRequest> {
@@ -308,7 +328,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getShiftAssignments(date?: string): Promise<ShiftAssignmentWithRelations[]> {
-    let query = db
+    let baseQuery = db
       .select({
         id: shiftAssignments.id,
         personnelId: shiftAssignments.personnelId,
@@ -322,14 +342,21 @@ export class DatabaseStorage implements IStorage {
       })
       .from(shiftAssignments)
       .leftJoin(personnel, eq(shiftAssignments.personnelId, personnel.id))
-      .leftJoin(shifts, eq(shiftAssignments.shiftId, shifts.id))
-      .where(eq(shiftAssignments.isActive, true));
+      .leftJoin(shifts, eq(shiftAssignments.shiftId, shifts.id));
 
     if (date) {
-      query = query.where(and(eq(shiftAssignments.isActive, true), eq(shiftAssignments.date, date)));
+      baseQuery = baseQuery.where(and(eq(shiftAssignments.isActive, true), eq(shiftAssignments.date, date)));
+    } else {
+      baseQuery = baseQuery.where(eq(shiftAssignments.isActive, true));
     }
 
-    return await query.orderBy(shiftAssignments.date);
+    const result = await baseQuery.orderBy(shiftAssignments.date);
+    
+    return result.map(row => ({
+      ...row,
+      personnel: row.personnel || undefined,
+      shift: row.shift || undefined
+    }));
   }
 
   async createShiftAssignment(assignment: InsertShiftAssignment): Promise<ShiftAssignment> {

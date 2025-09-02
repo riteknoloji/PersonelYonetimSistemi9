@@ -71,17 +71,17 @@ export function PersonnelModal({ open, onOpenChange, personnel, mode }: Personne
       position: personnel?.position || "",
       salary: personnel?.salary || "",
       hireDate: personnel?.hireDate || "",
-      status: personnel?.status || "active",
+      status: (personnel?.status as "active" | "inactive" | "terminated") || "active",
     },
   });
 
   // Fetch departments
-  const { data: departments = [] } = useQuery({
+  const { data: departments = [] } = useQuery<Department[]>({
     queryKey: ["/api/departments"],
   });
 
   // Fetch branches
-  const { data: branches = [] } = useQuery({
+  const { data: branches = [] } = useQuery<Branch[]>({
     queryKey: ["/api/branches"],
   });
 

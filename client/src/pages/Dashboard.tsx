@@ -39,7 +39,12 @@ export default function Dashboard({
     }
   }, [isAuthenticated, authLoading, toast]);
 
-  const { data: stats, isLoading: statsLoading, error } = useQuery({
+  const { data: stats, isLoading: statsLoading, error } = useQuery<{
+    totalPersonnel: number;
+    onLeaveToday: number;
+    activeShifts: number;
+    pendingLeaves: number;
+  }>({
     queryKey: ["/api/dashboard/stats"],
     retry: false,
   });

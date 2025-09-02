@@ -33,7 +33,7 @@ export function PersonnelList() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: personnel = [], isLoading, error } = useQuery({
+  const { data: personnel = [], isLoading, error } = useQuery<PersonnelWithRelations[]>({
     queryKey: ["/api/personnel"],
     retry: false,
   });
