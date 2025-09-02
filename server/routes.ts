@@ -1513,6 +1513,169 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Education Records routes
+  app.get('/api/education-records/:personnelId', isAuthenticated, async (req, res) => {
+    try {
+      const records = await storage.getEducationRecords(req.params.personnelId);
+      res.json(records);
+    } catch (error) {
+      console.error("Error fetching education records:", error);
+      res.status(500).json({ message: "Failed to fetch education records" });
+    }
+  });
+
+  app.post('/api/education-records', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertEducationRecordSchema.parse(req.body);
+      const record = await storage.createEducationRecord(validatedData);
+      res.status(201).json(record);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error creating education record:", error);
+      res.status(500).json({ message: "Failed to create education record" });
+    }
+  });
+
+  app.put('/api/education-records/:id', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertEducationRecordSchema.partial().parse(req.body);
+      const record = await storage.updateEducationRecord(req.params.id, validatedData);
+      res.json(record);
+    } catch (error) {
+      console.error("Error updating education record:", error);
+      res.status(500).json({ message: "Failed to update education record" });
+    }
+  });
+
+  app.delete('/api/education-records/:id', isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteEducationRecord(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting education record:", error);
+      res.status(500).json({ message: "Failed to delete education record" });
+    }
+  });
+
+  // Health Records routes
+  app.get('/api/health-records/:personnelId', isAuthenticated, async (req, res) => {
+    try {
+      const records = await storage.getHealthRecords(req.params.personnelId);
+      res.json(records);
+    } catch (error) {
+      console.error("Error fetching health records:", error);
+      res.status(500).json({ message: "Failed to fetch health records" });
+    }
+  });
+
+  app.post('/api/health-records', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertHealthRecordSchema.parse(req.body);
+      const record = await storage.createHealthRecord(validatedData);
+      res.status(201).json(record);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error creating health record:", error);
+      res.status(500).json({ message: "Failed to create health record" });
+    }
+  });
+
+  app.put('/api/health-records/:id', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertHealthRecordSchema.partial().parse(req.body);
+      const record = await storage.updateHealthRecord(req.params.id, validatedData);
+      res.json(record);
+    } catch (error) {
+      console.error("Error updating health record:", error);
+      res.status(500).json({ message: "Failed to update health record" });
+    }
+  });
+
+  app.delete('/api/health-records/:id', isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteHealthRecord(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting health record:", error);
+      res.status(500).json({ message: "Failed to delete health record" });
+    }
+  });
+
+  // Document routes
+  app.get('/api/documents/:personnelId', isAuthenticated, async (req, res) => {
+    try {
+      const documents = await storage.getDocuments(req.params.personnelId);
+      res.json(documents);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+      res.status(500).json({ message: "Failed to fetch documents" });
+    }
+  });
+
+  app.post('/api/documents', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertDocumentSchema.parse(req.body);
+      const document = await storage.createDocument(validatedData);
+      res.status(201).json(document);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error creating document:", error);
+      res.status(500).json({ message: "Failed to create document" });
+    }
+  });
+
+  app.put('/api/documents/:id', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertDocumentSchema.partial().parse(req.body);
+      const document = await storage.updateDocument(req.params.id, validatedData);
+      res.json(document);
+    } catch (error) {
+      console.error("Error updating document:", error);
+      res.status(500).json({ message: "Failed to update document" });
+    }
+  });
+
+  app.delete('/api/documents/:id', isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteDocument(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      res.status(500).json({ message: "Failed to delete document" });
+    }
+  });
+
+  // Branch update and delete routes (if missing)
+  app.put('/api/branches/:id', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertBranchSchema.partial().parse(req.body);
+      const branch = await storage.updateBranch(req.params.id, validatedData);
+      res.json(branch);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error updating branch:", error);
+      res.status(500).json({ message: "Failed to update branch" });
+    }
+  });
+
+  app.delete('/api/branches/:id', isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteBranch(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting branch:", error);
+      res.status(500).json({ message: "Failed to delete branch" });
+    }
+  });
+
   // Notification templates
   app.get('/api/notifications/templates', isAuthenticated, async (req, res) => {
     try {

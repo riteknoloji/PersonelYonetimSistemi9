@@ -530,6 +530,81 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(attendanceRecords.date));
   }
 
+  // Education records operations
+  async getEducationRecords(personnelId: string): Promise<EducationRecord[]> {
+    return await db.select().from(educationRecords)
+      .where(eq(educationRecords.personnelId, personnelId))
+      .orderBy(desc(educationRecords.graduationYear));
+  }
+
+  async createEducationRecord(record: InsertEducationRecord): Promise<EducationRecord> {
+    const [newRecord] = await db.insert(educationRecords).values(record).returning();
+    return newRecord;
+  }
+
+  async updateEducationRecord(id: string, record: Partial<InsertEducationRecord>): Promise<EducationRecord> {
+    const [updatedRecord] = await db
+      .update(educationRecords)
+      .set({ ...record, updatedAt: new Date() })
+      .where(eq(educationRecords.id, id))
+      .returning();
+    return updatedRecord;
+  }
+
+  async deleteEducationRecord(id: string): Promise<void> {
+    await db.delete(educationRecords).where(eq(educationRecords.id, id));
+  }
+
+  // Health records operations
+  async getHealthRecords(personnelId: string): Promise<HealthRecord[]> {
+    return await db.select().from(healthRecords)
+      .where(eq(healthRecords.personnelId, personnelId))
+      .orderBy(desc(healthRecords.reportDate));
+  }
+
+  async createHealthRecord(record: InsertHealthRecord): Promise<HealthRecord> {
+    const [newRecord] = await db.insert(healthRecords).values(record).returning();
+    return newRecord;
+  }
+
+  async updateHealthRecord(id: string, record: Partial<InsertHealthRecord>): Promise<HealthRecord> {
+    const [updatedRecord] = await db
+      .update(healthRecords)
+      .set({ ...record, updatedAt: new Date() })
+      .where(eq(healthRecords.id, id))
+      .returning();
+    return updatedRecord;
+  }
+
+  async deleteHealthRecord(id: string): Promise<void> {
+    await db.delete(healthRecords).where(eq(healthRecords.id, id));
+  }
+
+  // Document operations
+  async getDocuments(personnelId: string): Promise<Document[]> {
+    return await db.select().from(documents)
+      .where(eq(documents.personnelId, personnelId))
+      .orderBy(desc(documents.issueDate));
+  }
+
+  async createDocument(document: InsertDocument): Promise<Document> {
+    const [newDocument] = await db.insert(documents).values(document).returning();
+    return newDocument;
+  }
+
+  async updateDocument(id: string, document: Partial<InsertDocument>): Promise<Document> {
+    const [updatedDocument] = await db
+      .update(documents)
+      .set({ ...document, updatedAt: new Date() })
+      .where(eq(documents.id, id))
+      .returning();
+    return updatedDocument;
+  }
+
+  async deleteDocument(id: string): Promise<void> {
+    await db.delete(documents).where(eq(documents.id, id));
+  }
+
   async createAttendanceRecord(record: InsertAttendanceRecord): Promise<AttendanceRecord> {
     const [newRecord] = await db.insert(attendanceRecords).values(record).returning();
     return newRecord;

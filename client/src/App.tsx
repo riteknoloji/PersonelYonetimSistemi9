@@ -15,6 +15,7 @@ import Personnel from "@/pages/Personnel";
 import Leave from "@/pages/Leave";
 import Shift from "@/pages/Shift";
 import QrCodeManagement from "@/pages/QrCodeManagement";
+import Branch from "@/pages/Branch";
 import Calendar from "@/pages/Calendar";
 import Notifications from "@/pages/Notifications";
 import Reports from "@/pages/Reports";
@@ -84,12 +85,7 @@ function Router() {
               {activeMenuItem === "attendance" && <QrCodeManagement />}
               {activeMenuItem === "calendar" && <Calendar />}
               {activeMenuItem === "notifications" && <Notifications />}
-              {activeMenuItem === "branch" && (
-                <div className="px-4 py-6 sm:px-6 lg:px-8">
-                  <h1 className="text-2xl font-bold">Şube Yönetimi</h1>
-                  <p className="text-muted-foreground mt-2">Bu özellik yakında eklenecek.</p>
-                </div>
-              )}
+              {activeMenuItem === "branch" && <Branch />}
               {activeMenuItem === "calendar" && (
                 <div className="px-4 py-6 sm:px-6 lg:px-8">
                   <h1 className="text-2xl font-bold">Takvim</h1>

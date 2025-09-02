@@ -1,0 +1,227 @@
+Personel Yönetim Sistemi – Birleşik Doküman
+
+PERSONEL YÖNETİM SİSTEMİ – BİRLEŞİK DOKÜMAN
+
+Bu doküman, tüm modüller, tasarım standartları, mobil uygulama uyumluluğu ve güvenlik önlemlerini tek parça halinde içermektedir.
+
+--------------------------------------------------
+1. PERSONEL ÖZLÜK DOSYASI MODÜLÜ
+- İşe giriş/çıkış tarihleri ve nedenleri
+- Pozisyon bilgileri ve geçmiş pozisyon değişiklikleri
+- Departman/ekip atamaları
+- Maaş bilgileri ve maaş değişiklik geçmişi
+- Performans değerlendirme kayıtları
+- Terfi ve disiplin bilgileri
+
+Eğitim Bilgileri:
+- Mezuniyet bilgileri (okul, bölüm, derece, mezuniyet yılı)
+- Sertifikalar (sertifika adı, veren kurum, geçerlilik tarihi)
+- Kurs ve seminer kayıtları
+- Yetkinlik ve beceri envanteri
+- Dil bilgileri ve seviyeleri
+
+Sağlık Raporları:
+- Periyodik sağlık kontrolleri
+- İş kazası kayıtları
+- Meslek hastalığı bilgileri
+- Özel sağlık durumları
+
+Belge Yönetimi:
+- Otomatik belge süre takibi ve yenileme uyarıları
+- Belgelerin kategorilere göre sınıflandırılması
+- İmzalı belge yönetimi (dijital imza desteği)
+- Belge onay süreçleri
+- Arşivleme ve silinmiş belgeleri geri getirme özelliği
+
+--------------------------------------------------
+2. PERSONEL İZİN YÖNETİMİ MODÜLÜ
+İzin Talebi Süreci:
+- Kullanıcı dostu izin talep formu
+- İzin türleri (yıllık izin, hastalık izni, doğum izni vb.)
+- İzin akış şemaları ve onay hiyerarşisi
+- Mobil cihazlardan izin talebi oluşturma
+- İzin talebi durum bildirimleri (SMS, push)
+
+İzin Takip Özellikleri:
+- Kullanılan izinlerin görsel grafiklerle gösterimi
+- Yıllık izin planlaması
+- İzin çakışması önleme mekanizması
+- İzin devir hesabı otomatik hesaplama
+- İzin kullanım istatistikleri ve raporları
+
+Özel Gün Uyarı Sistemi:
+- Resmi tatiller ve özel günler veritabanı
+- Yoğun dönemlerde izin kısıtlamaları
+- Departman bazlı minimum personel sayısı kontrolü
+- İzin talebinde bulunulan dönemdeki önemli etkinliklerin gösterilmesi
+
+--------------------------------------------------
+3. VARDİYA YÖNETİMİ MODÜLÜ
+Vardiya Planlama:
+- Excel/CSV şablonları ile toplu vardiya yükleme
+- Vardiya kopyalama ve çoğaltma özellikleri
+- Vardiya şablonları oluşturma ve yeniden kullanma
+- Vardiya değişim talepleri ve onay mekanizması
+
+Görsel Takip:
+- Renk kodlu vardiya gösterimi (Sabah: mavi, Akşam: turuncu, Gece: koyu mavi, İzin: yeşil)
+- Vardiya çakışmalarının otomatik tespiti
+- Vardiya özeti ve toplam çalışma saati hesaplama
+- Vardiya değişiklik geçmişi
+
+Filtreleme ve Raporlama:
+- Çoklu filtreleme seçenekleri (isim, departman, vardiya türü)
+- Vardiya uyumsuzluk raporları
+- Fazla mesai takibi
+- Vardiya bazlı performans analizleri
+
+--------------------------------------------------
+4. QR KOD GİRİŞ-ÇIKIŞ SİSTEMİ
+Güvenlik Özellikleri:
+- Şifreleme algoritması ile QR kod üretimi
+- PIN korumalı ekran aktivasyonu
+- Oturum yönetimi ve güvenli çıkış
+- Kullanıcı aktivite logları
+
+Yoklama Sistemi:
+- Gerçek zamanlı yoklama takibi
+- Gecikme, erken çıkış, devamsızlık uyarıları
+- Mobil cihazlardan QR okutma imkanı
+- IP tabanlı lokasyon kontrolü (opsiyonel)
+
+Raporlama:
+- Anlık yoklama durumu raporu
+- Günlük devamsızlık listesi
+- Geç gelme istatistikleri
+- Çalışma saati özetleri
+
+--------------------------------------------------
+5. PERSONEL YÖNETİMİ ANA MODÜLÜ
+Merkezi Veri Yönetimi:
+- Tüm personel bilgilerinin tek ekrandan görüntülenmesi
+- Detaylı arama ve filtreleme seçenekleri
+- Toplu güncelleme ve silme işlemleri
+- Veri bütünlüğü kontrolleri
+
+Personel Profilleri:
+- Kişisel bilgiler
+- İş bilgileri (pozisyon, maaş, çalışma koşulları)
+- Yetkinlikler ve beceriler
+- Kariyer geçmişi ve gelişim planları
+
+--------------------------------------------------
+6. GİRİŞ-ÇIKIŞ TAKİP MODÜLÜ
+Esnek Raporlama:
+- Özelleştirilebilir tarih aralıkları
+- Çoklu filtreleme seçenekleri
+- Grafiksel gösterim ve istatistikler
+- Excel, PDF ve CSV formatlarında dışa aktarma
+
+Manuel Kayıt Yönetimi:
+- Yetkili kullanıcılar için manuel kayıt ekleme/düzenleme
+- Manuel işlemlerin log kayıtları
+- Onay gerektiren manuel işlemler
+
+--------------------------------------------------
+7. ŞUBE YÖNETİMİ MODÜLÜ
+- Sınırsız şube ekleme
+- Şube bilgileri (adres, iletişim, çalışma saatleri)
+- Şube bazlı ayar ve kısıtlama yönetimi
+- Şube performans karşılaştırmaları
+
+Yetki Devri:
+- Şube yöneticisi atama
+- Şube bazlı raporlama ve analizler
+- Şube içi personel transferleri
+
+--------------------------------------------------
+8. YETKİLENDİRME MEKANİZMASI
+Rol Tabanlı Erişim Kontrolü:
+- Ön tanımlı roller (Süper Admin, Admin, Şube Admin, İK Uzmanı, Yönetici, Personel)
+- Modül bazlı yetkilendirme
+- Özelleştirilebilir roller
+- İzin miras alma
+
+Güvenlik Önlemleri:
+- İki faktörlü kimlik doğrulama
+- Oturum yönetimi ve zaman aşımı
+- Şifre politikaları
+- Kullanıcı aktivite logları
+
+--------------------------------------------------
+9. TAKVİM MODÜLÜ
+- Türkiye'ye özel resmi ve dini tatiller veritabanı
+- Kurumsal etkinlik takvimi
+- Kişisel ve grup takvimleri
+- Takvim paylaşımı
+- Renk kodlu etkinlikler
+- Tekrarlayan etkinlik yönetimi
+- Bildirim ve hatırlatma seçenekleri
+
+--------------------------------------------------
+10. EK ÖZELLİKLER
+Kapsamlı Raporlama:
+- Ön tanımlı rapor şablonları
+- Özelleştirilebilir rapor tasarımcısı
+- Otomatik rapor dağıtımı
+- Gerçek zamanlı veri görselleştirme
+
+Bildirim Sistemi:
+- Çoklu kanal bildirimleri (SMS, push)
+- Bildirim filtreleme ve önceliklendirme
+- Bildirim şablonları
+- Bildirim geçmişi
+
+--------------------------------------------------
+11. TASARIM STANDARTLARI
+- Standart kart tasarımı (başlık, ikon, kısa bilgi, işlem butonları)
+- Modal pencere tasarımı (başlık, içerik, onay/iptal)
+- Arama alanı (dinamik öneriler, filtreler ile birlikte)
+- Filtreleme alanları (departman, tarih, şube, vardiya, izin türü vb.)
+- Menü yapısı (yan menü + üst menü)
+- Renk kodlaması (vardiya, izin, etkinlik)
+- Bildirim alanı (ikon + dropdown)
+- Responsive tasarım (desktop, tablet, mobil uyumlu)
+
+--------------------------------------------------
+12. MOBİL UYGULAMA ALTYAPISI
+- Mobil uygulama entegrasyonu için API-first yaklaşımı
+- Mobil cihazlarda QR kod okutma özelliği
+- İzin talebi entegrasyonu
+- Vardiya görüntüleme
+- Bildirim takibi
+- Mobil uygulama sadece tek cihazla kullanılabilir (dashboard’dan cihaz kaldırılmadıkça başka cihazdan giriş yapılamaz)
+- Sistem genel ayarlarında "Mobil Uygulama Yönetim Alanı"
+- Dashboard’dan SMS/bildirim gönderme modülü
+- Personel profilinden SMS/bildirim gönderimi
+
+--------------------------------------------------
+13. GÜVENLİK
+A) Veri Güvenliği:
+- AES-256 tabanlı şifreleme
+- Hassas bilgilerin maskeleme
+- Yedekleme ve felaket kurtarma planı
+- Firewall + IDS/IPS entegrasyonu
+
+B) Uygulama ve API Güvenliği:
+- JWT / OAuth2 tabanlı kimlik doğrulama
+- Rate limiting, brute force ve DDoS koruması
+- HTTPS (TLS 1.3) zorunluluğu
+- SQL Injection, XSS, CSRF koruması
+- Sertifika pinning
+- API loglama
+
+C) Sistem Güvenliği:
+- Düzenli güvenlik yamaları
+- Güvenlik duvarı ve ağ segmentasyonu
+- Çok faktörlü kimlik doğrulama (MFA), netgsm sms
+- SIEM entegrasyonu
+
+D) Kullanıcı Güvenliği:
+- Karmaşık şifre politikaları
+- Tek cihaz kısıtlaması (mobil uygulama)
+- Anormal davranış tespiti
+- Kullanıcı aktivitelerinin loglanması
+- Mobil cihaz kaybında cihaz kaldırma ve hesap kilitleme özelliği
+
+--------------------------------------------------
