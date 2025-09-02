@@ -8,6 +8,9 @@ import { ShiftList } from "@/components/Shift/ShiftList";
 import { ShiftAssignmentList } from "@/components/Shift/ShiftAssignmentList";
 import { ShiftModal } from "@/components/Shift/ShiftModal";
 import { ShiftAssignmentModal } from "@/components/Shift/ShiftAssignmentModal";
+import { ShiftCalendar } from "@/components/Shift/ShiftCalendar";
+import { ShiftTemplates } from "@/components/Shift/ShiftTemplates";
+import { ShiftChangeRequests } from "@/components/Shift/ShiftChangeRequests";
 import { CalendarClock, UserPlus, Clock } from "lucide-react";
 
 export default function Shift() {
@@ -76,7 +79,7 @@ export default function Shift() {
 
       {/* Tabs */}
       <Tabs defaultValue="shifts" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="shifts" data-testid="tab-shifts">
             Vardiya Tanımları
           </TabsTrigger>
@@ -85,6 +88,12 @@ export default function Shift() {
           </TabsTrigger>
           <TabsTrigger value="calendar" data-testid="tab-shift-calendar">
             Vardiya Takvimi
+          </TabsTrigger>
+          <TabsTrigger value="templates" data-testid="tab-shift-templates">
+            Şablonlar
+          </TabsTrigger>
+          <TabsTrigger value="requests" data-testid="tab-shift-requests">
+            Değişim Talepleri
           </TabsTrigger>
         </TabsList>
 
@@ -97,25 +106,15 @@ export default function Shift() {
         </TabsContent>
 
         <TabsContent value="calendar" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <CalendarClock className="mr-2 h-5 w-5" />
-                Vardiya Takvimi
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <CalendarClock className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">
-                  Vardiya takvim görünümü yakında eklenecek...
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Günlük ve haftalık vardiya planlarını görsel olarak inceleyebileceksiniz.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <ShiftCalendar />
+        </TabsContent>
+
+        <TabsContent value="templates" className="space-y-4">
+          <ShiftTemplates />
+        </TabsContent>
+
+        <TabsContent value="requests" className="space-y-4">
+          <ShiftChangeRequests />
         </TabsContent>
       </Tabs>
 

@@ -14,6 +14,10 @@ import Dashboard from "@/pages/Dashboard";
 import Personnel from "@/pages/Personnel";
 import Leave from "@/pages/Leave";
 import Shift from "@/pages/Shift";
+import QrCodeManagement from "@/pages/QrCodeManagement";
+import Calendar from "@/pages/Calendar";
+import Notifications from "@/pages/Notifications";
+import Reports from "@/pages/Reports";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -37,10 +41,7 @@ function Router() {
   };
 
   const handleGenerateReport = () => {
-    toast({
-      title: "Rapor Oluştur",
-      description: "Rapor oluşturma özelliği yakında eklenecek.",
-    });
+    setActiveMenuItem("reports");
   };
 
   const handleSendNotification = () => {
@@ -80,12 +81,9 @@ function Router() {
               {activeMenuItem === "personnel" && <Personnel />}
               {activeMenuItem === "leave" && <Leave />}
               {activeMenuItem === "shift" && <Shift />}
-              {activeMenuItem === "attendance" && (
-                <div className="px-4 py-6 sm:px-6 lg:px-8">
-                  <h1 className="text-2xl font-bold">Giriş-Çıkış Takip</h1>
-                  <p className="text-muted-foreground mt-2">Bu özellik yakında eklenecek.</p>
-                </div>
-              )}
+              {activeMenuItem === "attendance" && <QrCodeManagement />}
+              {activeMenuItem === "calendar" && <Calendar />}
+              {activeMenuItem === "notifications" && <Notifications />}
               {activeMenuItem === "branch" && (
                 <div className="px-4 py-6 sm:px-6 lg:px-8">
                   <h1 className="text-2xl font-bold">Şube Yönetimi</h1>
@@ -98,12 +96,7 @@ function Router() {
                   <p className="text-muted-foreground mt-2">Bu özellik yakında eklenecek.</p>
                 </div>
               )}
-              {activeMenuItem === "reports" && (
-                <div className="px-4 py-6 sm:px-6 lg:px-8">
-                  <h1 className="text-2xl font-bold">Raporlar</h1>
-                  <p className="text-muted-foreground mt-2">Bu özellik yakında eklenecek.</p>
-                </div>
-              )}
+              {activeMenuItem === "reports" && <Reports />}
               {activeMenuItem === "settings" && (
                 <div className="px-4 py-6 sm:px-6 lg:px-8">
                   <h1 className="text-2xl font-bold">Ayarlar</h1>

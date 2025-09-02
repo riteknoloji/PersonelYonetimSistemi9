@@ -8,6 +8,8 @@ import { LeaveRequestList } from "@/components/Leave/LeaveRequestList";
 import { LeaveTypesList } from "@/components/Leave/LeaveTypesList";
 import { LeaveRequestModal } from "@/components/Leave/LeaveRequestModal";
 import { LeaveTypeModal } from "@/components/Leave/LeaveTypeModal";
+import { LeaveCalendarView } from "@/components/Leave/LeaveCalendarView";
+import { LeaveStatistics } from "@/components/Leave/LeaveStatistics";
 import { CalendarPlus, Settings } from "lucide-react";
 
 export default function Leave() {
@@ -93,33 +95,11 @@ export default function Leave() {
         </TabsContent>
 
         <TabsContent value="calendar" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>İzin Takvimi</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">
-                  Takvim görünümü yakında eklenecek...
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <LeaveCalendarView />
         </TabsContent>
 
         <TabsContent value="statistics" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>İzin İstatistikleri</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">
-                  İstatistik grafikler yakında eklenecek...
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <LeaveStatistics />
         </TabsContent>
       </Tabs>
 
