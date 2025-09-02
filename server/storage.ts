@@ -198,6 +198,8 @@ export interface IStorage {
   // Notification operations
   getNotifications(recipientId: string): Promise<NotificationWithRelations[]>;
   createNotification(notification: InsertNotification): Promise<Notification>;
+  updateNotification(id: string, notification: Partial<InsertNotification>): Promise<Notification>;
+  deleteNotification(id: string): Promise<void>;
   markNotificationAsRead(id: string): Promise<void>;
   markNotificationAsSent(id: string): Promise<void>;
   
@@ -888,6 +890,18 @@ export class DatabaseStorage implements IStorage {
     return newNotification;
   }
 
+  async updateNotification(id: string, notification: Partial<InsertNotification>): Promise<Notification> {
+    const [updatedNotification] = await db.update(notifications)
+      .set({ ...notification, updatedAt: new Date() })
+      .where(eq(notifications.id, id))
+      .returning();
+    return updatedNotification;
+  }
+
+  async deleteNotification(id: string): Promise<void> {
+    await db.delete(notifications).where(eq(notifications.id, id));
+  }
+
   async markNotificationAsRead(id: string): Promise<void> {
     await db.update(notifications)
       .set({ readAt: new Date(), updatedAt: new Date() })
@@ -1233,15 +1247,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getSecurityLogs(userId?: string, limit: number = 100): Promise<SecurityLog[]> {
-    let query = db.select().from(securityLogs);
-    
     if (userId) {
-      query = query.where(eq(securityLogs.userId, userId));
+      return await db.select()
+        .from(securityLogs)
+        .where(eq(securityLogs.userId, userId))
+        .orderBy(desc(securityLogs.createdAt))
+        .limit(limit);
+    } else {
+      return await db.select()
+        .from(securityLogs)
+        .orderBy(desc(securityLogs.createdAt))
+        .limit(limit);
     }
-    
-    return await query
-      .orderBy(desc(securityLogs.createdAt))
-      .limit(limit);
   }
 }
 
